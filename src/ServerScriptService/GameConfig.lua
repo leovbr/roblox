@@ -12,6 +12,53 @@ Config.SECRET_ZONE_MIN = 7
 Config.SPECIAL_RESPAWN_SECONDS = 600
 
 Config.TREADMILL_SPEEDS = {5, 10, 20, 50, 100, 200, 500, 750, 1000}
+Config.TREADMILL_PRICES = {
+	[2] = {cash = 15000, robux = 15},
+	[3] = {cash = 100000, robux = 40},
+	[4] = {cash = 1000000, robux = 100},
+	[5] = {cash = 10000000, robux = 250},
+	[6] = {cash = 100000000, robux = 500},
+	[7] = {cash = 1000000000, robux = 1000},
+	[8] = {cash = 10000000000, robux = 2500},
+	[9] = {cash = 100000000000, robux = 5000},
+}
+
+-- Developer Product IDs are intentionally 0 until the products are created in Roblox Creator Dashboard.
+Config.DEVELOPER_PRODUCTS = {
+	Treadmill2 = 0,
+	Treadmill3 = 0,
+	Treadmill4 = 0,
+	Treadmill5 = 0,
+	Treadmill6 = 0,
+	Treadmill7 = 0,
+	Treadmill8 = 0,
+	Treadmill9 = 0,
+	SpeedX2 = 0,
+	SpeedX3 = 0,
+	SpeedX4 = 0,
+	SpeedInstant1M = 0,
+	TrailBasic = 0,
+	TrailNeon = 0,
+	TrailPlasma = 0,
+	TrailGalaxy = 0,
+	TrailVoid = 0,
+}
+
+Config.SPEED_BOOSTS = {
+	X2 = {multiplier = 2, robux = 2, duration = 300},
+	X3 = {multiplier = 3, robux = 4, duration = 300},
+	X4 = {multiplier = 4, robux = 8, duration = 300},
+}
+Config.INSTANT_SPEED = {cash = 1000000, robux = 40}
+
+Config.TRAILS = {
+	Basic = {cash = 10000, robux = 5, color = Color3.fromRGB(255, 255, 255), width = 0.35},
+	Neon = {cash = 100000, robux = 15, color = Color3.fromRGB(0, 255, 255), width = 0.45},
+	Plasma = {cash = 1000000, robux = 40, color = Color3.fromRGB(255, 80, 220), width = 0.55},
+	Galaxy = {cash = 10000000, robux = 100, color = Color3.fromRGB(120, 90, 255), width = 0.65},
+	Void = {cash = 100000000, robux = 250, color = Color3.fromRGB(180, 70, 255), width = 0.75},
+}
+
 Config.DAY_SECONDS = 240
 Config.NIGHT_SECONDS = 10
 
@@ -24,7 +71,6 @@ Config.EGG_TIERS = {
 	Secret = {weight = 0.1, income = 200, size = 7.2},
 }
 
--- Every zone has its own habitat, palette, materials and creature pool.
 Config.ZONES = {
 	[1] = {name = "Emerald Forest", habitat = "Forest", color = Color3.fromRGB(55, 170, 75), material = Enum.Material.Grass, creatures = {"Mossy Monkey", "Leafy Slime", "Forest Bunny"}},
 	[2] = {name = "Coral Ocean", habitat = "Ocean", color = Color3.fromRGB(35, 150, 210), material = Enum.Material.Sand, creatures = {"Coral Crab", "Bubble Fish", "Tiny Shark"}},
