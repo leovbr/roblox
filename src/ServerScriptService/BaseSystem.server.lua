@@ -17,7 +17,7 @@ local BASES = {
 	{color = Color3.fromRGB(70, 190, 85), accent = Color3.fromRGB(150, 255, 100), material = Enum.Material.Grass, name = "Forest Base"},
 	{color = Color3.fromRGB(45, 150, 220), accent = Color3.fromRGB(120, 235, 255), material = Enum.Material.Sand, name = "Ocean Base"},
 	{color = Color3.fromRGB(225, 75, 35), accent = Color3.fromRGB(255, 190, 50), material = Enum.Material.Slate, name = "Lava Base"},
-	{color = Color3.fromRGB(150, 95, 230), accent = Color3.fromRGB(230, 150, 255), material = Enum.Material.Crystal, name = "Crystal Base"},
+	{color = Color3.fromRGB(150, 95, 230), accent = Color3.fromRGB(230, 150, 255), material = Enum.Material.Glass, name = "Crystal Base"},
 	{color = Color3.fromRGB(245, 190, 55), accent = Color3.fromRGB(255, 245, 150), material = Enum.Material.Marble, name = "Golden Base"},
 }
 
@@ -74,7 +74,6 @@ local function buildBase(id, info, center)
 
 	makePart(model, "Floor", SIZE, center, info.color, info.material)
 
-	-- Open-front plot with low fences, matching the reference-style base layout.
 	makePart(model, "BackFence", Vector3.new(SIZE.X, WALL_HEIGHT, WALL_THICKNESS), center + Vector3.new(0, WALL_HEIGHT / 2, SIZE.Z / 2), info.accent, Enum.Material.Wood)
 	makePart(model, "LeftFence", Vector3.new(WALL_THICKNESS, WALL_HEIGHT, SIZE.Z), center + Vector3.new(-SIZE.X / 2, WALL_HEIGHT / 2, 0), info.accent, Enum.Material.Wood)
 	makePart(model, "RightFence", Vector3.new(WALL_THICKNESS, WALL_HEIGHT, SIZE.Z), center + Vector3.new(SIZE.X / 2, WALL_HEIGHT / 2, 0), info.accent, Enum.Material.Wood)
@@ -133,8 +132,7 @@ local function buildBase(id, info, center)
 	prompt.Triggered:Connect(function(player)
 		local data = player:FindFirstChild("GameData")
 		local baseId = data and data:FindFirstChild("BaseId")
-		if not baseId then return end
-		if baseId.Value ~= 0 then return end
+		if not baseId or baseId.Value ~= 0 then return end
 		if model:GetAttribute("OwnerUserId") ~= 0 then return end
 
 		baseId.Value = id
