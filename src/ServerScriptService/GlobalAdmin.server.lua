@@ -3,8 +3,8 @@ local ReplicatedStorage=game:GetService("ReplicatedStorage")
 local MessagingService=game:GetService("MessagingService")
 local HttpService=game:GetService("HttpService")
 
--- Replace 0 with your Roblox UserId.
-local OWNER_USER_IDS={[0]=true}
+-- Leo / @Leovbriansyh
+local OWNER_USER_IDS={[5703800829]=true}
 local TOPIC="CuriBrainrot_OwnerPower_v1"
 local remotes=ReplicatedStorage:FindFirstChild("GameRemotes") or Instance.new("Folder")
 remotes.Name="GameRemotes" remotes.Parent=ReplicatedStorage
