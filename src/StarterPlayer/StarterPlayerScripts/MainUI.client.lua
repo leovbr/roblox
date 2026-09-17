@@ -8,7 +8,12 @@ local hatchResult = remotes:WaitForChild("HatchResult")
 local upgradeEvent = remotes:WaitForChild("Upgrade")
 local purchaseEvent = remotes:WaitForChild("PurchaseRobux")
 local trailEvent = remotes:WaitForChild("BuyTrail")
-local Config = require(ReplicatedStorage:WaitForChild("GameConfig"))
+
+local TREADMILL_PRICES = {
+	[2] = {cash = 15000, robux = 15}, [3] = {cash = 100000, robux = 40}, [4] = {cash = 1000000, robux = 100},
+	[5] = {cash = 10000000, robux = 250}, [6] = {cash = 100000000, robux = 500}, [7] = {cash = 1000000000, robux = 1000},
+	[8] = {cash = 10000000000, robux = 2500}, [9] = {cash = 100000000000, robux = 5000},
+}
 
 local gui = Instance.new("ScreenGui")
 gui.Name = "LeoHUD"
@@ -80,33 +85,24 @@ end
 local function nextSpeedText()
 	local data = player:FindFirstChild("GameData")
 	local level = data and data:FindFirstChild("SpeedLevel")
-	local current = level and level.Value or 1
-	local nextLevel = current + 1
-	local price = Config.TREADMILL_PRICES[nextLevel]
+	local nextLevel = (level and level.Value or 1) + 1
+	local price = TREADMILL_PRICES[nextLevel]
 	if not price then return "⚡ MAX SPEED" end
 	return string.format("⚡ LVL %d  $%s / %dR", nextLevel, cashText(price.cash), price.robux)
 end
 
-button(nextSpeedText(), 0, function()
+local speedButton = button(nextSpeedText(), 0, function()
 	local data = player:FindFirstChild("GameData")
 	local level = data and data:FindFirstChild("SpeedLevel")
 	local nextLevel = (level and level.Value or 1) + 1
-	if Config.TREADMILL_PRICES[nextLevel] then
-		upgradeEvent:FireServer("Speed")
-	end
+	if TREADMILL_PRICES[nextLevel] then upgradeEvent:FireServer("Speed") end
 end)
 button("💎 SPEED x2  /  2R", 50, function() purchaseEvent:FireServer("SpeedX2") end)
 button("💎 SPEED x3  /  4R", 100, function() purchaseEvent:FireServer("SpeedX3") end)
 button("💎 SPEED x4  /  8R", 150, function() purchaseEvent:FireServer("SpeedX4") end)
-button("⚡ +$1M INSTANT  /  40R", 200, function()
-	purchaseEvent:FireServer("SpeedInstant1M")
-end)
-button("✨ TRAIL: NEON  $100K / 15R", 250, function()
-	trailEvent:FireServer("Neon")
-end)
-button("🌌 TRAIL: GALAXY  $10M / 100R", 300, function()
-	trailEvent:FireServer("Galaxy")
-end)
+button("⚡ +$1M INSTANT  /  40R", 200, function() purchaseEvent:FireServer("SpeedInstant1M") end)
+button("✨ TRAIL: NEON  $100K / 15R", 250, function() trailEvent:FireServer("Neon") end)
+button("🌌 TRAIL: GALAXY  $10M / 100R", 300, function() trailEvent:FireServer("Galaxy") end)
 
 local toast = label(gui, "", UDim2.fromOffset(520, 45), UDim2.new(0.5, -260, 0.82, 0), 20)
 toast.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
@@ -117,15 +113,12 @@ toastCorner.Parent = toast
 
 local function showToast(message)
 	toast.Text = message
-	task.delay(3, function()
-		if toast then toast.Text = "" end
-	end)
+	task.delay(3, function() if toast then toast.Text = "" end end)
 end
 
 purchaseEvent.OnClientEvent:Connect(function(success, message)
 	showToast((success and "✓ " or "⚠ ") .. tostring(message))
 end)
-
 hatchResult.OnClientEvent:Connect(function(success, message)
 	showToast(success and ("🎉 " .. message .. " BRAINROT!") or ("⚠ " .. message))
 end)
@@ -143,8 +136,7 @@ task.spawn(function()
 		if zone then zoneLabel.Text = "ZONE " .. tostring(zone.Value) end
 		if slots and brainrots then slotsLabel.Text = "BRAINROTS " .. #brainrots:GetChildren() .. "/" .. slots.Value end
 		boostLabel.Text = "SPEED x" .. tostring(multiplier)
-		local speedButton = actions:FindFirstChildWhichIsA("TextButton")
-		if speedButton then speedButton.Text = nextSpeedText() end
+		speedButton.Text = nextSpeedText()
 		task.wait(0.25)
 	end
 end)
