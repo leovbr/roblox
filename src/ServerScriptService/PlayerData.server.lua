@@ -3,13 +3,13 @@
 
 local Players = game:GetService("Players")
 local DataStoreService = game:GetService("DataStoreService")
-
 local store = DataStoreService:GetDataStore("CuriBrainrot_PlayerData_v1")
 
 local DEFAULT = {
 	Cash = 0,
 	Zone = 1,
 	SpeedLevel = 1,
+	SpeedMultiplier = 1,
 	EggSlots = 5,
 	AuraLevel = 0,
 	CageLevel = 1,
@@ -26,28 +26,14 @@ end
 
 local function setupPlayer(player)
 	if player:FindFirstChild("GameData") then return end
-
-	local stats = Instance.new("Folder")
-	stats.Name = "leaderstats"
-	stats.Parent = player
+	local stats = Instance.new("Folder"); stats.Name = "leaderstats"; stats.Parent = player
 	local cash = makeValue(stats, "Cash", DEFAULT.Cash)
+	local data = Instance.new("Folder"); data.Name = "GameData"; data.Parent = player
+	for name, value in pairs(DEFAULT) do if name ~= "Cash" then makeValue(data, name, value) end end
+	local brainrots = Instance.new("Folder"); brainrots.Name = "Brainrots"; brainrots.Parent = data
+	local ownedTrails = Instance.new("Folder"); ownedTrails.Name = "OwnedTrails"; ownedTrails.Parent = data
 
-	local data = Instance.new("Folder")
-	data.Name = "GameData"
-	data.Parent = player
-	for name, value in pairs(DEFAULT) do
-		if name ~= "Cash" then makeValue(data, name, value) end
-	end
-
-	local brainrots = Instance.new("Folder")
-	brainrots.Name = "Brainrots"
-	brainrots.Parent = data
-	local ownedTrails = Instance.new("Folder")
-	ownedTrails.Name = "OwnedTrails"
-	ownedTrails.Parent = data
-
-	local key = "Player_" .. player.UserId
-	local ok, saved = pcall(function() return store:GetAsync(key) end)
+	local ok, saved = pcall(function() return store:GetAsync("Player_" .. player.UserId) end)
 	if ok and type(saved) == "table" then
 		cash.Value = tonumber(saved.Cash) or DEFAULT.Cash
 		for name, default in pairs(DEFAULT) do
@@ -59,13 +45,9 @@ local function setupPlayer(player)
 		if type(saved.Brainrots) == "table" then
 			for _, entry in ipairs(saved.Brainrots) do
 				if type(entry) == "table" and entry.Name and entry.Value then
-					local b = Instance.new("StringValue")
-					b.Name = tostring(entry.Name)
-					b.Value = tostring(entry.Value)
+					local b = Instance.new("StringValue"); b.Name = tostring(entry.Name); b.Value = tostring(entry.Value)
 					for attr, attrValue in pairs(entry.Attributes or {}) do
-						if type(attrValue) == "number" or type(attrValue) == "string" or type(attrValue) == "boolean" then
-							b:SetAttribute(attr, attrValue)
-						end
+						if type(attrValue) == "number" or type(attrValue) == "string" or type(attrValue) == "boolean" then b:SetAttribute(attr, attrValue) end
 					end
 					b.Parent = brainrots
 				end
@@ -74,10 +56,7 @@ local function setupPlayer(player)
 		if type(saved.OwnedTrails) == "table" then
 			for trailName, owned in pairs(saved.OwnedTrails) do
 				if owned == true then
-					local flag = Instance.new("BoolValue")
-					flag.Name = tostring(trailName)
-					flag.Value = true
-					flag.Parent = ownedTrails
+					local flag = Instance.new("BoolValue"); flag.Name = tostring(trailName); flag.Value = true; flag.Parent = ownedTrails
 				end
 			end
 		end
@@ -87,6 +66,7 @@ local function setupPlayer(player)
 	elseif not ok then
 		warn("DataStore load failed for " .. player.Name .. ": " .. tostring(saved))
 	end
+	player:SetAttribute("SpeedBoostMultiplier", data.SpeedMultiplier.Value)
 end
 
 local function serializeBrainrots(brainrots)
@@ -95,28 +75,24 @@ local function serializeBrainrots(brainrots)
 		local attrs = {}
 		for _, attrName in ipairs({"Tier", "Income", "Zone", "Habitat", "EggColor", "DisplayScale", "Slot"}) do
 			local value = b:GetAttribute(attrName)
-			if type(value) == "number" or type(value) == "string" or type(value) == "boolean" then
-				attrs[attrName] = value
-			end
+			if type(value) == "number" or type(value) == "string" or type(value) == "boolean" then attrs[attrName] = value end
 		end
-		table.insert(result, {Name = b.Name, Value = b.Value, Attributes = attrs})
+		result[#result + 1] = {Name = b.Name, Value = b.Value, Attributes = attrs}
 	end
 	return result
 end
 
 local function serializeTrails(ownedTrails)
 	local result = {}
-	for _, trail in ipairs(ownedTrails:GetChildren()) do
-		if trail:IsA("BoolValue") and trail.Value then result[trail.Name] = true end
-	end
+	for _, trail in ipairs(ownedTrails:GetChildren()) do if trail:IsA("BoolValue") and trail.Value then result[trail.Name] = true end end
 	return result
 end
 
 local function savePlayer(player)
-	local stats = player:FindFirstChild("leaderstats")
-	local data = player:FindFirstChild("GameData")
+	local stats, data = player:FindFirstChild("leaderstats"), player:FindFirstChild("GameData")
 	if not stats or not data then return end
 	local cash = stats:FindFirstChild("Cash")
+	local multiplier = data:FindFirstChild("SpeedMultiplier")
 	local payload = {
 		Cash = cash and cash.Value or 0,
 		Brainrots = serializeBrainrots(data.Brainrots),
@@ -125,18 +101,14 @@ local function savePlayer(player)
 	}
 	for name, default in pairs(DEFAULT) do
 		if name ~= "Cash" and name ~= "BaseId" then
-			local value = data:FindFirstChild(name)
-			payload[name] = value and value.Value or default
+			local value = data:FindFirstChild(name); payload[name] = value and value.Value or default
 		end
 	end
-	local ok, err = pcall(function() store:SetAsync("Player_" .. player.UserId, payload) end)
-	if not ok then warn("DataStore save failed for " .. player.Name .. ": " .. tostring(err)) end
+	payload.SpeedMultiplier = multiplier and multiplier.Value or (player:GetAttribute("SpeedBoostMultiplier") or 1)
+	pcall(function() store:SetAsync("Player_" .. player.UserId, payload) end)
 end
 
 Players.PlayerAdded:Connect(setupPlayer)
 Players.PlayerRemoving:Connect(savePlayer)
 for _, player in ipairs(Players:GetPlayers()) do setupPlayer(player) end
-
-game:BindToClose(function()
-	for _, player in ipairs(Players:GetPlayers()) do savePlayer(player) end
-end)
+game:BindToClose(function() for _, player in ipairs(Players:GetPlayers()) do savePlayer(player) end end)
