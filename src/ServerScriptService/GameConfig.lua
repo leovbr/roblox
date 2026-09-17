@@ -13,42 +13,27 @@ Config.SPECIAL_RESPAWN_SECONDS = 600
 
 Config.TREADMILL_SPEEDS = {5, 10, 20, 50, 100, 200, 500, 750, 1000}
 Config.TREADMILL_PRICES = {
-	[2] = {cash = 15000, robux = 15},
-	[3] = {cash = 100000, robux = 40},
-	[4] = {cash = 1000000, robux = 100},
-	[5] = {cash = 10000000, robux = 250},
-	[6] = {cash = 100000000, robux = 500},
-	[7] = {cash = 1000000000, robux = 1000},
-	[8] = {cash = 10000000000, robux = 2500},
-	[9] = {cash = 100000000000, robux = 5000},
+	[2] = {cash = 15000, robux = 15}, [3] = {cash = 100000, robux = 40}, [4] = {cash = 1000000, robux = 100},
+	[5] = {cash = 10000000, robux = 250}, [6] = {cash = 100000000, robux = 500}, [7] = {cash = 1000000000, robux = 1000},
+	[8] = {cash = 10000000000, robux = 2500}, [9] = {cash = 100000000000, robux = 5000},
 }
 
--- Developer Product IDs are intentionally 0 until the products are created in Roblox Creator Dashboard.
 Config.DEVELOPER_PRODUCTS = {
-	Treadmill2 = 0,
-	Treadmill3 = 0,
-	Treadmill4 = 0,
-	Treadmill5 = 0,
-	Treadmill6 = 0,
-	Treadmill7 = 0,
-	Treadmill8 = 0,
-	Treadmill9 = 0,
-	SpeedX2 = 0,
-	SpeedX3 = 0,
-	SpeedX4 = 0,
-	SpeedInstant1M = 0,
-	TrailBasic = 0,
-	TrailNeon = 0,
-	TrailPlasma = 0,
-	TrailGalaxy = 0,
-	TrailVoid = 0,
+	Treadmill2 = 0, Treadmill3 = 0, Treadmill4 = 0, Treadmill5 = 0, Treadmill6 = 0, Treadmill7 = 0, Treadmill8 = 0, Treadmill9 = 0,
+	SpeedX2 = 0, SpeedX3 = 0, SpeedX4 = 0, SpeedX5 = 0, SpeedX6 = 0, SpeedX7 = 0, SpeedX8 = 0,
+	SpeedX9 = 0, SpeedX10 = 0, SpeedX11 = 0, SpeedX12 = 0, SpeedX13 = 0, SpeedX14 = 0, SpeedX15 = 0, SpeedX16 = 0,
+	InstantMoney1M = 0, SpeedInstant1M = 0,
+	TrailBasic = 0, TrailNeon = 0, TrailPlasma = 0, TrailGalaxy = 0, TrailVoid = 0,
 }
 
-Config.SPEED_BOOSTS = {
-	X2 = {multiplier = 2, robux = 2, duration = 300},
-	X3 = {multiplier = 3, robux = 4, duration = 300},
-	X4 = {multiplier = 4, robux = 8, duration = 300},
-}
+-- Permanent multiplier tiers. Prices after X4 continue doubling: 2, 4, 8, 16, 32...
+Config.SPEED_BOOSTS = {}
+for multiplier = 2, 16 do
+	Config.SPEED_BOOSTS["X" .. multiplier] = {multiplier = multiplier, robux = 2 ^ (multiplier - 1)}
+end
+
+-- Permanent instant upgrades. Cash grant is permanent in the sense that it is an immediate balance increase, not a timed effect.
+Config.INSTANT_MONEY = {cash = 1000000, robux = 40}
 Config.INSTANT_SPEED = {cash = 1000000, robux = 40}
 
 Config.TRAILS = {
@@ -63,27 +48,24 @@ Config.DAY_SECONDS = 240
 Config.NIGHT_SECONDS = 10
 
 Config.EGG_TIERS = {
-	Common = {weight = 60, income = 1, size = 4.0},
-	Rare = {weight = 25, income = 3, size = 4.5},
-	Epic = {weight = 10, income = 8, size = 5.0},
-	Legendary = {weight = 4, income = 20, size = 5.6},
-	Mythic = {weight = 0.9, income = 60, size = 6.4},
-	Secret = {weight = 0.1, income = 200, size = 7.2},
+	Common = {weight = 60, income = 1, size = 4.0}, Rare = {weight = 25, income = 3, size = 4.5}, Epic = {weight = 10, income = 8, size = 5.0},
+	Legendary = {weight = 4, income = 20, size = 5.6}, Mythic = {weight = 0.9, income = 60, size = 6.4}, Secret = {weight = 0.1, income = 200, size = 7.2},
 }
 
+-- Recommended base movement speed needed to keep pace with the guardian pressure in each zone.
 Config.ZONES = {
-	[1] = {name = "Emerald Forest", habitat = "Forest", color = Color3.fromRGB(55, 170, 75), material = Enum.Material.Grass, creatures = {"Mossy Monkey", "Leafy Slime", "Forest Bunny"}},
-	[2] = {name = "Coral Ocean", habitat = "Ocean", color = Color3.fromRGB(35, 150, 210), material = Enum.Material.Sand, creatures = {"Coral Crab", "Bubble Fish", "Tiny Shark"}},
-	[3] = {name = "Inferno Lava", habitat = "Lava", color = Color3.fromRGB(230, 65, 25), material = Enum.Material.Slate, creatures = {"Lava Lizard", "Ember Bat", "Magma Golem"}},
-	[4] = {name = "Frozen Glacier", habitat = "Ice", color = Color3.fromRGB(130, 220, 255), material = Enum.Material.Ice, creatures = {"Snow Fox", "Ice Penguin", "Frost Yeti"}},
-	[5] = {name = "Thunder Valley", habitat = "Storm", color = Color3.fromRGB(120, 90, 210), material = Enum.Material.Rock, creatures = {"Storm Crow", "Volt Bunny", "Thunder Golem"}},
-	[6] = {name = "Crystal Cavern", habitat = "Crystal", color = Color3.fromRGB(220, 80, 230), material = Enum.Material.CrackedLava, creatures = {"Crystal Bat", "Gem Slime", "Prism Dragon"}},
-	[7] = {name = "Sky Islands", habitat = "Sky", color = Color3.fromRGB(90, 170, 255), material = Enum.Material.Cloud, creatures = {"Cloud Cat", "Sky Ray", "Celestial Bird"}},
-	[8] = {name = "Ancient Ruins", habitat = "Ruins", color = Color3.fromRGB(170, 145, 95), material = Enum.Material.Sandstone, creatures = {"Ruin Golem", "Relic Rat", "Ancient Serpent"}},
-	[9] = {name = "Shadow Swamp", habitat = "Swamp", color = Color3.fromRGB(75, 95, 70), material = Enum.Material.Mud, creatures = {"Shadow Frog", "Bog Beast", "Swamp Witchling"}},
-	[10] = {name = "Star Galaxy", habitat = "Galaxy", color = Color3.fromRGB(75, 55, 180), material = Enum.Material.Neon, creatures = {"Star Cat", "Cosmic Blob", "Galaxy Dragon"}},
-	[11] = {name = "Void Dimension", habitat = "Void", color = Color3.fromRGB(45, 20, 70), material = Enum.Material.Neon, creatures = {"Void Eye", "Null Beast", "Void Serpent"}},
-	[12] = {name = "Secret Paradise", habitat = "Secret", color = Color3.fromRGB(255, 215, 70), material = Enum.Material.Marble, creatures = {"Golden Monkey", "Secret Angel", "Heaven Dragon"}},
+	[1] = {name="Emerald Forest", habitat="Forest", color=Color3.fromRGB(55,170,75), material=Enum.Material.Grass, recommendedSpeed=5, creatures={"Mossy Monkey","Leafy Slime","Forest Bunny"}},
+	[2] = {name="Coral Ocean", habitat="Ocean", color=Color3.fromRGB(35,150,210), material=Enum.Material.Sand, recommendedSpeed=10, creatures={"Coral Crab","Bubble Fish","Tiny Shark"}},
+	[3] = {name="Inferno Lava", habitat="Lava", color=Color3.fromRGB(230,65,25), material=Enum.Material.Slate, recommendedSpeed=20, creatures={"Lava Lizard","Ember Bat","Magma Golem"}},
+	[4] = {name="Frozen Glacier", habitat="Ice", color=Color3.fromRGB(130,220,255), material=Enum.Material.Ice, recommendedSpeed=30, creatures={"Snow Fox","Ice Penguin","Frost Yeti"}},
+	[5] = {name="Thunder Valley", habitat="Storm", color=Color3.fromRGB(120,90,210), material=Enum.Material.Rock, recommendedSpeed=40, creatures={"Storm Crow","Volt Bunny","Thunder Golem"}},
+	[6] = {name="Crystal Cavern", habitat="Crystal", color=Color3.fromRGB(220,80,230), material=Enum.Material.CrackedLava, recommendedSpeed=50, creatures={"Crystal Bat","Gem Slime","Prism Dragon"}},
+	[7] = {name="Sky Islands", habitat="Sky", color=Color3.fromRGB(90,170,255), material=Enum.Material.Cloud, recommendedSpeed=60, creatures={"Cloud Cat","Sky Ray","Celestial Bird"}},
+	[8] = {name="Ancient Ruins", habitat="Ruins", color=Color3.fromRGB(170,145,95), material=Enum.Material.Sandstone, recommendedSpeed=70, creatures={"Ruin Golem","Relic Rat","Ancient Serpent"}},
+	[9] = {name="Shadow Swamp", habitat="Swamp", color=Color3.fromRGB(75,95,70), material=Enum.Material.Mud, recommendedSpeed=80, creatures={"Shadow Frog","Bog Beast","Swamp Witchling"}},
+	[10] = {name="Star Galaxy", habitat="Galaxy", color=Color3.fromRGB(75,55,180), material=Enum.Material.Neon, recommendedSpeed=90, creatures={"Star Cat","Cosmic Blob","Galaxy Dragon"}},
+	[11] = {name="Void Dimension", habitat="Void", color=Color3.fromRGB(45,20,70), material=Enum.Material.Neon, recommendedSpeed=100, creatures={"Void Eye","Null Beast","Void Serpent"}},
+	[12] = {name="Pinky Dreamland", habitat="Pinky", color=Color3.fromRGB(255,105,190), material=Enum.Material.Neon, recommendedSpeed=120, creatures={"Pinky Bunny","Cotton Candy Slime","Love Dragon"}},
 }
 
 return Config
