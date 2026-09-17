@@ -28,14 +28,31 @@ Config.GAME_PASSES = {
 	MysticEggZone7 = 0,
 }
 
--- Kept for future consumable Developer Products. Permanent upgrades use GAME_PASSES above.
 Config.DEVELOPER_PRODUCTS = {
 	InstantMoney1M = 0,
 }
 
+-- Permanent speed Game Pass prices. Capped at 1,500 Robux.
 Config.SPEED_BOOSTS = {}
+local speedPassPrices = {
+	[2] = 2,
+	[3] = 5,
+	[4] = 10,
+	[5] = 20,
+	[6] = 35,
+	[7] = 60,
+	[8] = 100,
+	[9] = 150,
+	[10] = 225,
+	[11] = 325,
+	[12] = 450,
+	[13] = 600,
+	[14] = 800,
+	[15] = 1100,
+	[16] = 1500,
+}
 for multiplier = 2, 16 do
-	Config.SPEED_BOOSTS["X" .. multiplier] = {multiplier = multiplier, robux = 2 ^ (multiplier - 1)}
+	Config.SPEED_BOOSTS["X" .. multiplier] = {multiplier = multiplier, robux = speedPassPrices[multiplier]}
 end
 
 Config.INSTANT_MONEY = {cash = 1000000, robux = 40}
