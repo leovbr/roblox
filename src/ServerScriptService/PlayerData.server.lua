@@ -42,6 +42,9 @@ local function setupPlayer(player)
 	local brainrots = Instance.new("Folder")
 	brainrots.Name = "Brainrots"
 	brainrots.Parent = data
+	local ownedTrails = Instance.new("Folder")
+	ownedTrails.Name = "OwnedTrails"
+	ownedTrails.Parent = data
 
 	local key = "Player_" .. player.UserId
 	local ok, saved = pcall(function() return store:GetAsync(key) end)
@@ -54,7 +57,7 @@ local function setupPlayer(player)
 			end
 		end
 		if type(saved.Brainrots) == "table" then
-			for index, entry in ipairs(saved.Brainrots) do
+			for _, entry in ipairs(saved.Brainrots) do
 				if type(entry) == "table" and entry.Name and entry.Value then
 					local b = Instance.new("StringValue")
 					b.Name = tostring(entry.Name)
@@ -67,6 +70,19 @@ local function setupPlayer(player)
 					b.Parent = brainrots
 				end
 			end
+		end
+		if type(saved.OwnedTrails) == "table" then
+			for trailName, owned in pairs(saved.OwnedTrails) do
+				if owned == true then
+					local flag = Instance.new("BoolValue")
+					flag.Name = tostring(trailName)
+					flag.Value = true
+					flag.Parent = ownedTrails
+				end
+			end
+		end
+		if type(saved.EquippedTrail) == "string" and saved.EquippedTrail ~= "" and ownedTrails:FindFirstChild(saved.EquippedTrail) then
+			player:SetAttribute("EquippedTrail", saved.EquippedTrail)
 		end
 	elseif not ok then
 		warn("DataStore load failed for " .. player.Name .. ": " .. tostring(saved))
@@ -88,12 +104,25 @@ local function serializeBrainrots(brainrots)
 	return result
 end
 
+local function serializeTrails(ownedTrails)
+	local result = {}
+	for _, trail in ipairs(ownedTrails:GetChildren()) do
+		if trail:IsA("BoolValue") and trail.Value then result[trail.Name] = true end
+	end
+	return result
+end
+
 local function savePlayer(player)
 	local stats = player:FindFirstChild("leaderstats")
 	local data = player:FindFirstChild("GameData")
 	if not stats or not data then return end
 	local cash = stats:FindFirstChild("Cash")
-	local payload = {Cash = cash and cash.Value or 0, Brainrots = serializeBrainrots(data.Brainrots)}
+	local payload = {
+		Cash = cash and cash.Value or 0,
+		Brainrots = serializeBrainrots(data.Brainrots),
+		OwnedTrails = serializeTrails(data.OwnedTrails),
+		EquippedTrail = player:GetAttribute("EquippedTrail") or "",
+	}
 	for name, default in pairs(DEFAULT) do
 		if name ~= "Cash" and name ~= "BaseId" then
 			local value = data:FindFirstChild(name)
@@ -109,7 +138,5 @@ Players.PlayerRemoving:Connect(savePlayer)
 for _, player in ipairs(Players:GetPlayers()) do setupPlayer(player) end
 
 game:BindToClose(function()
-	for _, player in ipairs(Players:GetPlayers()) do
-		savePlayer(player)
-	end
+	for _, player in ipairs(Players:GetPlayers()) do savePlayer(player) end
 end)
