@@ -1,5 +1,6 @@
 -- DayNight.server.lua
 local Lighting = game:GetService("Lighting")
+local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
 
 local DAY_LENGTH = 240
@@ -7,9 +8,14 @@ local NIGHT_LENGTH = 10
 local TOTAL_LENGTH = DAY_LENGTH + NIGHT_LENGTH
 local clock = 8
 
+Workspace:SetAttribute("IsNight", false)
+
 RunService.Heartbeat:Connect(function(dt)
 	clock = (clock + (24 / TOTAL_LENGTH) * dt) % 24
 	Lighting.ClockTime = clock
+	-- The final 10 seconds of the cycle are night.
+	local cycleTime = ((clock - 8) % 24) / 24 * TOTAL_LENGTH
+	Workspace:SetAttribute("IsNight", cycleTime >= DAY_LENGTH)
 end)
 
 Lighting.ClockTime = clock
