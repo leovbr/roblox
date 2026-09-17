@@ -1,5 +1,5 @@
 -- EggSystem.server.lua
--- Habitat-aware eggs: size/color change by tier, while hatch results come from the zone habitat.
+-- Habitat-aware eggs: size is randomized independently from tier, while hatch results come from the zone habitat.
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
@@ -11,7 +11,6 @@ local rng = Random.new()
 local eggFolder = Workspace:FindFirstChild("Eggs") or Instance.new("Folder")
 eggFolder.Name = "Eggs"
 eggFolder.Parent = Workspace
-
 eggFolder:ClearAllChildren()
 
 local remotes = ReplicatedStorage:FindFirstChild("GameRemotes") or Instance.new("Folder")
@@ -100,21 +99,27 @@ end
 local function spawnEgg(zone, index)
 	local zoneData = Config.ZONES[zone]
 	local tierVisual = ({"Common", "Rare", "Epic", "Legendary", "Mythic"})[math.clamp(index, 1, 5)]
-	local tierData = Config.EGG_TIERS[tierVisual]
+
+	-- Egg size is completely independent from rarity/tier.
+	-- Every egg can randomly be tiny, small, medium, large, or huge.
+	local eggHeight = rng:NextNumber(3.2, 8.5)
+	local eggWidth = eggHeight * rng:NextNumber(0.68, 0.88)
+	local eggDepth = eggWidth * rng:NextNumber(0.90, 1.10)
 
 	local centerX = (zone - 1) * 78
 	local egg = Instance.new("Part")
 	egg.Name = string.format("Zone%d_%sEgg%d", zone, zoneData.habitat, index)
 	egg.Shape = Enum.PartType.Ball
-	egg.Size = Vector3.new(tierData.size * 0.82, tierData.size * 1.18, tierData.size * 0.82)
+	egg.Size = Vector3.new(eggWidth, eggHeight, eggDepth)
 	egg.Anchored = true
 	egg.CanCollide = false
-	egg.Position = Vector3.new(centerX + (index - 3) * 10, 5.0 + tierData.size * 0.2, 25)
+	egg.Position = Vector3.new(centerX + (index - 3) * 10, 5.0 + eggHeight * 0.2, 25)
 	egg.Color = TIER_COLORS[tierVisual]
 	egg.Material = tierVisual == "Mythic" and Enum.Material.Neon or Enum.Material.SmoothPlastic
 	egg:SetAttribute("Zone", zone)
 	egg:SetAttribute("Habitat", zoneData.habitat)
 	egg:SetAttribute("Tier", tierVisual)
+	egg:SetAttribute("EggSize", eggHeight)
 	egg:SetAttribute("CreaturePool", table.concat(zoneData.creatures, ", "))
 	egg.Parent = eggFolder
 
@@ -143,4 +148,4 @@ for zone = 1, Config.TOTAL_ZONES do
 	end
 end
 
-print("EggSystem loaded: 60 habitat-specific eggs with unique sizes/colors.")
+print("EggSystem loaded: 60 habitat-specific eggs with randomized sizes independent of tier.")
