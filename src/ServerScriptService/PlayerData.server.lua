@@ -8,6 +8,7 @@ local DEFAULT = {
 	EggSlots = 5,
 	AuraLevel = 0,
 	CageLevel = 1,
+	BaseId = 0,
 }
 
 local function setupPlayer(player)
