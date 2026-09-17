@@ -18,41 +18,56 @@ Config.TREADMILL_PRICES = {
 	[8] = {cash = 10000000000, robux = 1000}, [9] = {cash = 100000000000, robux = 1500},
 }
 
--- Permanent benefits: replace every 0 with the real Game Pass ID after creating the passes.
+-- Permanent Game Pass IDs.
 Config.GAME_PASSES = {
-	Treadmill2 = 0, Treadmill3 = 0, Treadmill4 = 0, Treadmill5 = 0, Treadmill6 = 0, Treadmill7 = 0, Treadmill8 = 0, Treadmill9 = 0,
-	SpeedX2 = 0, SpeedX3 = 0, SpeedX4 = 0, SpeedX5 = 0, SpeedX6 = 0, SpeedX7 = 0, SpeedX8 = 0,
-	SpeedX9 = 0, SpeedX10 = 0, SpeedX11 = 0, SpeedX12 = 0, SpeedX13 = 0, SpeedX14 = 0, SpeedX15 = 0, SpeedX16 = 0,
-	InstantMoney1M = 0, SpeedInstant1M = 0,
-	TrailBasic = 0, TrailNeon = 0, TrailPlasma = 0, TrailGalaxy = 0, TrailVoid = 0,
-	MysticEggZone7 = 0,
+	Treadmill2 = 1985354663,
+	Treadmill3 = 1982174869,
+	Treadmill4 = 1981874913,
+	Treadmill5 = 1985468651,
+	Treadmill6 = 1985516634,
+	Treadmill7 = 1986338407,
+	Treadmill8 = 1984958700,
+	Treadmill9 = 1982198906,
+
+	SpeedX2 = 1985006697,
+	SpeedX4 = 1983500830,
+	SpeedX6 = 1982174871,
+	SpeedX8 = 1982852863,
+	SpeedX10 = 1985306661,
+	SpeedX12 = 1981784874,
+	SpeedX14 = 1981946872,
+	SpeedX16 = 1986536268,
+
+	InstantMoney1M = 1986590261,
+	SpeedInstant1M = 1984814829,
+
+	TrailBasic = 1985018696,
+	TrailNeon = 1984946703,
+	TrailPlasma = 1982282901,
+	TrailGalaxy = 1985678493,
+	TrailVoid = 1985480614,
+
+	MysticEggZone7 = 1981892816,
 }
 
 Config.DEVELOPER_PRODUCTS = {
 	InstantMoney1M = 0,
 }
 
--- Permanent speed Game Pass prices. Capped at 1,500 Robux.
+-- Permanent speed Game Pass prices. Even multipliers only, capped at 500 Robux.
 Config.SPEED_BOOSTS = {}
 local speedPassPrices = {
 	[2] = 2,
-	[3] = 5,
-	[4] = 10,
-	[5] = 20,
-	[6] = 35,
-	[7] = 60,
-	[8] = 100,
-	[9] = 150,
-	[10] = 225,
-	[11] = 325,
-	[12] = 450,
-	[13] = 600,
-	[14] = 800,
-	[15] = 1100,
-	[16] = 1500,
+	[4] = 8,
+	[6] = 20,
+	[8] = 45,
+	[10] = 80,
+	[12] = 150,
+	[14] = 300,
+	[16] = 500,
 }
-for multiplier = 2, 16 do
-	Config.SPEED_BOOSTS["X" .. multiplier] = {multiplier = multiplier, robux = speedPassPrices[multiplier]}
+for multiplier, price in pairs(speedPassPrices) do
+	Config.SPEED_BOOSTS["X" .. multiplier] = {multiplier = multiplier, robux = price}
 end
 
 Config.INSTANT_MONEY = {cash = 1000000, robux = 40}
