@@ -11,6 +11,8 @@ local DEFAULT = {
 }
 
 local function setupPlayer(player)
+	if player:FindFirstChild("GameData") then return end
+
 	local stats = Instance.new("Folder")
 	stats.Name = "leaderstats"
 	stats.Parent = player
@@ -32,6 +34,10 @@ local function setupPlayer(player)
 			v.Parent = data
 		end
 	end
+
+	local brainrots = Instance.new("Folder")
+	brainrots.Name = "Brainrots"
+	brainrots.Parent = data
 end
 
 Players.PlayerAdded:Connect(setupPlayer)
