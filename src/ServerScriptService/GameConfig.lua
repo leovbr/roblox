@@ -14,8 +14,8 @@ Config.SPECIAL_RESPAWN_SECONDS = 600
 Config.TREADMILL_SPEEDS = {5, 10, 20, 50, 100, 200, 500, 750, 1000}
 Config.TREADMILL_PRICES = {
 	[2] = {cash = 15000, robux = 15}, [3] = {cash = 100000, robux = 40}, [4] = {cash = 1000000, robux = 100},
-	[5] = {cash = 10000000, robux = 250}, [6] = {cash = 100000000, robux = 500}, [7] = {cash = 1000000000, robux = 1000},
-	[8] = {cash = 10000000000, robux = 2500}, [9] = {cash = 100000000000, robux = 5000},
+	[5] = {cash = 10000000, robux = 200}, [6] = {cash = 100000000, robux = 350}, [7] = {cash = 1000000000, robux = 600},
+	[8] = {cash = 10000000000, robux = 1000}, [9] = {cash = 100000000000, robux = 1500},
 }
 
 -- Permanent benefits: replace every 0 with the real Game Pass ID after creating the passes.
