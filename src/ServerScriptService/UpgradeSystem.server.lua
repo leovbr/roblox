@@ -11,6 +11,10 @@ local upgradeEvent = remotes:FindFirstChild("Upgrade") or Instance.new("RemoteEv
 upgradeEvent.Name = "Upgrade"
 upgradeEvent.Parent = remotes
 
+local purchaseEvent = remotes:FindFirstChild("PurchaseRobux") or Instance.new("RemoteEvent")
+purchaseEvent.Name = "PurchaseRobux"
+purchaseEvent.Parent = remotes
+
 local cooldown = {}
 
 local function upgrade(player, kind)
@@ -28,7 +32,9 @@ local function upgrade(player, kind)
 	if kind == "Speed" then
 		value = data:FindFirstChild("SpeedLevel")
 		if not value or value.Value >= #Config.TREADMILL_SPEEDS then return end
-		cost = 100 * (value.Value ^ 2)
+		local nextLevel = value.Value + 1
+		local price = Config.TREADMILL_PRICES[nextLevel]
+		cost = price and price.cash or 0
 	elseif kind == "Slots" then
 		value = data:FindFirstChild("EggSlots")
 		if not value or value.Value >= 15 then return end
@@ -41,9 +47,13 @@ local function upgrade(player, kind)
 		return
 	end
 
-	if cash.Value < cost then return end
+	if cost <= 0 or cash.Value < cost then return end
 	cash.Value -= cost
 	value.Value += 1
 end
 
 upgradeEvent.OnServerEvent:Connect(upgrade)
+
+Players.PlayerRemoving:Connect(function(player)
+	cooldown[player] = nil
+end)
