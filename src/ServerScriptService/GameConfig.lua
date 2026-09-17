@@ -18,13 +18,19 @@ Config.TREADMILL_PRICES = {
 	[8] = {cash = 10000000000, robux = 2500}, [9] = {cash = 100000000000, robux = 5000},
 }
 
-Config.DEVELOPER_PRODUCTS = {
+-- Permanent benefits: replace every 0 with the real Game Pass ID after creating the passes.
+Config.GAME_PASSES = {
 	Treadmill2 = 0, Treadmill3 = 0, Treadmill4 = 0, Treadmill5 = 0, Treadmill6 = 0, Treadmill7 = 0, Treadmill8 = 0, Treadmill9 = 0,
 	SpeedX2 = 0, SpeedX3 = 0, SpeedX4 = 0, SpeedX5 = 0, SpeedX6 = 0, SpeedX7 = 0, SpeedX8 = 0,
 	SpeedX9 = 0, SpeedX10 = 0, SpeedX11 = 0, SpeedX12 = 0, SpeedX13 = 0, SpeedX14 = 0, SpeedX15 = 0, SpeedX16 = 0,
 	InstantMoney1M = 0, SpeedInstant1M = 0,
 	TrailBasic = 0, TrailNeon = 0, TrailPlasma = 0, TrailGalaxy = 0, TrailVoid = 0,
 	MysticEggZone7 = 0,
+}
+
+-- Kept for future consumable Developer Products. Permanent upgrades use GAME_PASSES above.
+Config.DEVELOPER_PRODUCTS = {
+	InstantMoney1M = 0,
 }
 
 Config.SPEED_BOOSTS = {}
@@ -48,8 +54,6 @@ Config.DAY_SECONDS = 240
 Config.NIGHT_SECONDS = 10
 Config.NIGHT_HATCH_MULTIPLIER = 30
 
--- Size is independent from rarity. Hatch time grows with zone progression and egg size.
--- Zones 1-5 use 5x progression per zone; from zone 6 onward the super-big benchmark is 1 hour.
 Config.EGG_SIZES = {
 	Tiny = {min = 3.0, max = 3.8, hatchMultiplier = 1},
 	Small = {min = 3.8, max = 4.8, hatchMultiplier = 2},
