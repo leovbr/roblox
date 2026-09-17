@@ -5,10 +5,10 @@ Config.BASE_COUNT = 5
 Config.STARTING_EGG_SLOTS = 5
 Config.TOTAL_ZONES = 12
 Config.EGGS_PER_ZONE = 5
-Config.SPECIAL_ZONE_MIN = 5
-Config.SPECIAL_ZONE_MAX = 6
-Config.MYTHIC_ZONE_MIN = 7
-Config.SECRET_ZONE_MIN = 7
+Config.SPECIAL_ZONE_MIN = 4
+Config.SPECIAL_ZONE_MAX = 7
+Config.MYTHIC_ZONE_MIN = 4
+Config.SECRET_ZONE_MIN = 4
 Config.SPECIAL_RESPAWN_SECONDS = 600
 
 Config.TREADMILL_SPEEDS = {5, 10, 20, 50, 100, 200, 500, 750, 1000}
@@ -24,17 +24,17 @@ Config.DEVELOPER_PRODUCTS = {
 	SpeedX9 = 0, SpeedX10 = 0, SpeedX11 = 0, SpeedX12 = 0, SpeedX13 = 0, SpeedX14 = 0, SpeedX15 = 0, SpeedX16 = 0,
 	InstantMoney1M = 0, SpeedInstant1M = 0,
 	TrailBasic = 0, TrailNeon = 0, TrailPlasma = 0, TrailGalaxy = 0, TrailVoid = 0,
+	MysticEggZone7 = 0,
 }
 
--- Permanent multiplier tiers. Prices after X4 continue doubling: 2, 4, 8, 16, 32...
 Config.SPEED_BOOSTS = {}
 for multiplier = 2, 16 do
 	Config.SPEED_BOOSTS["X" .. multiplier] = {multiplier = multiplier, robux = 2 ^ (multiplier - 1)}
 end
 
--- Permanent instant upgrades. Cash grant is permanent in the sense that it is an immediate balance increase, not a timed effect.
 Config.INSTANT_MONEY = {cash = 1000000, robux = 40}
 Config.INSTANT_SPEED = {cash = 1000000, robux = 40}
+Config.MYSTIC_EGG_ZONE7 = {robux = 299, income = 1500000, tier = "Mystic", zone = 7, creature = "Celestial Pink Dragon"}
 
 Config.TRAILS = {
 	Basic = {cash = 10000, robux = 5, color = Color3.fromRGB(255, 255, 255), width = 0.35},
@@ -46,15 +46,40 @@ Config.TRAILS = {
 
 Config.DAY_SECONDS = 240
 Config.NIGHT_SECONDS = 10
+Config.NIGHT_HATCH_MULTIPLIER = 30
+
+-- Size is independent from rarity. Hatch time grows with zone progression and egg size.
+-- Zones 1-5 use 5x progression per zone; from zone 6 onward the super-big benchmark is 1 hour.
+Config.EGG_SIZES = {
+	Tiny = {min = 3.0, max = 3.8, hatchMultiplier = 1},
+	Small = {min = 3.8, max = 4.8, hatchMultiplier = 2},
+	Medium = {min = 4.8, max = 6.0, hatchMultiplier = 4},
+	Large = {min = 6.0, max = 7.2, hatchMultiplier = 8},
+	SuperBig = {min = 7.2, max = 9.5, hatchMultiplier = 12},
+}
+Config.BASE_HATCH_SECONDS = 5
+Config.ZONE_HATCH_MULTIPLIER = 5
+Config.SUPERBIG_LATE_ZONE_SECONDS = 3600
 
 Config.EGG_TIERS = {
-	Common = {weight = 60, income = 1, size = 4.0}, Rare = {weight = 25, income = 3, size = 4.5}, Epic = {weight = 10, income = 8, size = 5.0},
-	Legendary = {weight = 4, income = 20, size = 5.6}, Mythic = {weight = 0.9, income = 60, size = 6.4}, Secret = {weight = 0.1, income = 200, size = 7.2},
+	Common = {weight = 50, income = 1},
+	Uncommon = {weight = 30, income = 2},
+	Rare = {weight = 14, income = 5},
+	Epic = {weight = 5, income = 15},
+	Legendary = {weight = 1, income = 40},
+	Mythic = {weight = 0.08, income = 60},
+	Secret = {weight = 0.015, income = 200},
+	Divine = {weight = 0.005, income = 1000},
 }
 
--- Recommended base movement speed needed to keep pace with the guardian pressure in each zone.
+Config.RARITY_COLORS = {
+	Common = Color3.fromRGB(185,185,185), Uncommon = Color3.fromRGB(90,210,110), Rare = Color3.fromRGB(65,145,255),
+	Epic = Color3.fromRGB(190,75,255), Legendary = Color3.fromRGB(255,170,45), Mythic = Color3.fromRGB(255,55,95),
+	Secret = Color3.fromRGB(255,230,80), Divine = Color3.fromRGB(255,255,255),
+}
+
 Config.ZONES = {
-	[1] = {name="Emerald Forest", habitat="Forest", color=Color3.fromRGB(55,170,75), material=Enum.Material.Grass, recommendedSpeed=5, creatures={"Mossy Monkey","Leafy Slime","Forest Bunny"}},
+	[1] = {name="Emerald Forest", habitat="Forest", color=Color3.fromRGB(55,170,75), material=Enum.Material.Grass, recommendedSpeed=0, creatures={"Mossy Monkey","Leafy Slime","Forest Bunny"}},
 	[2] = {name="Coral Ocean", habitat="Ocean", color=Color3.fromRGB(35,150,210), material=Enum.Material.Sand, recommendedSpeed=10, creatures={"Coral Crab","Bubble Fish","Tiny Shark"}},
 	[3] = {name="Inferno Lava", habitat="Lava", color=Color3.fromRGB(230,65,25), material=Enum.Material.Slate, recommendedSpeed=20, creatures={"Lava Lizard","Ember Bat","Magma Golem"}},
 	[4] = {name="Frozen Glacier", habitat="Ice", color=Color3.fromRGB(130,220,255), material=Enum.Material.Ice, recommendedSpeed=30, creatures={"Snow Fox","Ice Penguin","Frost Yeti"}},
